@@ -6,6 +6,7 @@ import {
   FormEmailInput,
   FormPasswordInput,
 } from "../../components/CustomFormTextInput";
+import { loginUser } from "../../cognito";
 import { SignInButton, NotRegisteredButton } from "../../styles/Login";
 
 const Login = () => {
@@ -17,14 +18,20 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const token = await loginUser(data);
+      console.log(token.getAccessToken().getJwtToken()); // TODO: Store token
+      navigate("/");
+    } catch (e) {
+      alert(e);
+    }
   };
   return (
     <Container maxWidth="sm">
       <Typography
         variant="h4"
-        sx={{ fontFammily: "Raleway", color: "black" }}
+        sx={{ fontFamily: "Raleway", color: "black" }}
         align="center"
         gutterBottom
       >
@@ -37,10 +44,10 @@ const Login = () => {
             <FormPasswordInput />
           </Stack>
           <Stack alignItems="center" pb={4}>
-            <SignInButton type="submit" >Login</SignInButton>
+            <SignInButton type="submit">Login</SignInButton>
           </Stack>
           <NotRegisteredButton onClick={() => navigate("/register")}>
-              Not a user? Create an account
+            Not a user? Create an account
           </NotRegisteredButton>
         </form>
       </FormProvider>

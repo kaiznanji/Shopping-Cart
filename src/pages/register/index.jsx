@@ -6,9 +6,9 @@ import {
   FormEmailInput,
   FormPasswordInput,
 } from "../../components/CustomFormTextInput";
-import FormTextInput from '../../components/FormTextInput';
+import FormTextInput from "../../components/FormTextInput";
+import { registerUser } from "../../cognito";
 import { SignInButton, NotRegisteredButton } from "../../styles/Login";
-
 
 const Register = () => {
   const navigate = useNavigate();
@@ -21,14 +21,18 @@ const Register = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("Register Data:", data);
+  const onSubmit = async (data) => {
+    await registerUser(data);
+    alert(
+        "Sucessfully created user. Please check your email for a verification link."
+    );
+    navigate("/login");
   };
   return (
     <Container maxWidth="sm">
       <Typography
         variant="h4"
-        sx={{ fontFammily: "Raleway", color: "black" }}
+        sx={{ fontFamily: "Raleway", color: "black" }}
         align="center"
         gutterBottom
       >
@@ -43,7 +47,7 @@ const Register = () => {
             <FormPasswordInput />
           </Stack>
           <Stack alignItems="center" pb={4}>
-            <SignInButton type="submit" >Register</SignInButton>
+            <SignInButton type="submit">Register</SignInButton>
           </Stack>
           <NotRegisteredButton onClick={() => navigate("/login")}>
             Already a user? Login
