@@ -1,10 +1,15 @@
 import React from "react";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, Stack, IconButton, Avatar } from "@mui/material";
 import { AccountCircle, ShoppingCart } from "@mui/icons-material";
-import { NavBarContainer, NavBarTitle, LogoutButton, SignInButton } from "../styles/Navbar";
+import {
+  NavBarContainer,
+  NavBarTitle,
+  LogoutButton,
+  SignInButton,
+} from "../styles/Navbar";
 
 const Navbar = () => {
-    const x = true;
+  const x = true;
   return (
     <NavBarContainer>
       <NavBarTitle>Jitto Products</NavBarTitle>
@@ -13,9 +18,14 @@ const Navbar = () => {
           <ShoppingCart sx={{ fontSize: 30, color: "black", mr: 3 }} />
         </IconButton>
         {x ? (
-            <SignInButton endIcon={<AccountCircle />}>Sign in</SignInButton>
+          <SignInButton endIcon={<AccountCircle />}>Sign in</SignInButton>
         ) : (
+          <Stack spacing={3} direction="row">
+            <Avatar sx={{ width: 52, height: 52, bgcolor: "blue" }}>
+              K
+            </Avatar>
             <LogoutButton>Logout</LogoutButton>
+          </Stack>
         )}
       </Grid>
     </NavBarContainer>
