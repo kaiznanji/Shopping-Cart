@@ -44,3 +44,16 @@ export const LogoutButton = styled(Button)(() => ({
   borderRadius: 20,
   textTransform: "none",
 }));
+
+export const CartTotalButton = styled(Button)(() => ({
+    backgroundColor: "#58afe2",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#58afe2",
+    },
+    fontFamily: "Raleway",
+    fontSize: "20px",
+    marginRight: 4,
+    borderRadius: 50,
+    textTransform: "none",
+  }));

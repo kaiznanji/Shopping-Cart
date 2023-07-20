@@ -22,11 +22,17 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    await registerUser(data);
-    alert(
-        "Sucessfully created user. Please check your email for a verification link."
-    );
-    navigate("/login");
+    try {
+        await registerUser(data);
+        alert(
+            "Sucessfully created user. Please check your email for a verification link."
+        );
+        navigate("/login");
+      } catch (e) {
+        alert(e);
+      }
+    
+    
   };
   return (
     <Container maxWidth="sm">

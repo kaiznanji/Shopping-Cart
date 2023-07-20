@@ -12,22 +12,26 @@ const poolData = {
 const UserPool = new CognitoUserPool(poolData);
 
 export const registerUser = ({ email, password, firstname, lastname }) => {
-  return UserPool.signUp(
-    email,
-    password,
-    [
-      { Name: "given_name", Value: firstname },
-      { Name: "family_name", Value: lastname },
-    ],
-    null,
-    (err, data) => {
-      if (err) alert(err);
-      return "success";
-    }
-  );
+  return new Promise(function (resolve, reject) {
+    UserPool.signUp(
+      email,
+      password,
+      [
+        { Name: "given_name", Value: firstname },
+        { Name: "family_name", Value: lastname },
+      ],
+      null,
+      (err, data) => {
+        if (err) {
+            return reject(err);
+        }
+        resolve(data);
+      }
+    );
+  });
 };
 
-export const loginUser = async ({ email, password }) => {
+export const loginUser = ({ email, password }) => {
   var userData = {
     Username: email,
     Pool: UserPool,
@@ -46,4 +50,14 @@ export const loginUser = async ({ email, password }) => {
       }
     );
   });
+};
+
+export const logoutUser = (email) => {
+  var userData = {
+    Username: email,
+    Pool: UserPool,
+  };
+
+  var cognitoUser = new CognitoUser(userData);
+  cognitoUser.signOut();
 };

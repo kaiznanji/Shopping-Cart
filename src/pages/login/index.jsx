@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Container, Typography, Stack } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
+import { setAccessToken, setEmail } from "../../store/appSlice";
 import {
   FormEmailInput,
   FormPasswordInput,
@@ -9,8 +11,10 @@ import {
 import { loginUser } from "../../cognito";
 import { SignInButton, NotRegisteredButton } from "../../styles/Login";
 
+
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const methods = useForm({
     defaultValues: {
       email: "",
@@ -20,8 +24,9 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const token = await loginUser(data);
-      console.log(token.getAccessToken().getJwtToken()); // TODO: Store token
+      const user = await loginUser(data);
+      dispatch(setAccessToken(user.getAccessToken().getJwtToken()))
+      dispatch(setEmail(data.email));
       navigate("/");
     } catch (e) {
       alert(e);
