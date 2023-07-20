@@ -7,7 +7,7 @@ export const NavBarContainer = styled(AppBar)(() => ({
   padding: "15px 20px 15px 20px",
   position: "fixed",
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
+  gridTemplateColumns: "1fr 1fr"
 }));
 
 export const NavBarTitle = styled(Typography)(() => ({

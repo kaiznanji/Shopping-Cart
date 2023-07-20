@@ -6,10 +6,10 @@ import { products } from "../../data";
 const Home = () => {
   return (
     <Container maxWidth="xl">
-      <Grid container rowSpacing={15} columnSpacing={5} sx={{ paddingTop: 13 }}>
+      <Grid container rowSpacing={15} columnSpacing={5}>
         {products.map((product, index) => (
-          <Grid item xs>
-            <Product {...product} key={index} />
+          <Grid item xs key={index}>
+            <Product {...product} />
           </Grid>
         ))}
       </Grid>
