@@ -1,0 +1,52 @@
+name: deploy
+on:
+  push:
+    branches: 
+      - master
+concurrency: name
+jobs:
+  deploy:
+    name: deploy
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: 19
+      S3_BUCKET: jitto-products-bucket
+      CDN_DISTRIBUTION_ID: E37L99092RVJP7
+      AWS_REGION: ca-central-1
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache the dependencies
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: yarn install
+        run: yarn --prefer-offline
+      - name: build
+        run: yarn build
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: {{ env.AWS_REGION }}
+      - name: deploy
+        run: |
+          aws s3 rm s3://${{ env.S3_BUCKET }}/ --recursive
+          aws s3 cp ./target/www s3://${{ env.S3_BUCKET }} --cache-control 'public, max-age=31104000' --recursive
+          aws configure set preview.cloudfront true
+          aws cloudfront create-invalidation --distribution-id ${{ env.CDN_DISTRIBUTION_ID }} --paths "/*"
